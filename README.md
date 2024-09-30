@@ -7,14 +7,14 @@ CREATE DATABASE motomania;
 
 USE motomania;
 
-CREATE DATABASE tb_cliente (
+CREATE TABLE tb_cliente (
     cli_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     cli_nome VARCHAR(100),
     cli_fone VARCHAR(15),
     cli_email VARCHAR(100)
 )
 
-CREATE DATABASE tb_produtos(
+CREATE TABLE tb_produtos(
     prod_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     prod_nome VARCHAR(100),
     prod_valor DECIMAL (10,2),
