@@ -7,51 +7,56 @@
   <link rel="shortcut icon" href="./assets/img/logo.png" type="image/x-icon">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./assets/style.css">
-
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="./assets/img/logo_full.png" alt="Logo">
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="produtosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Produtos
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="produtosDropdown">
-              <li><a class="dropdown-item" href="#">Cadastrar Produto</a></li>
-            </ul>
-          </li>
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="clientesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Clientes
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="clientesDropdown">
-              <li><a class="dropdown-item" href="#">Cadastrar Cliente</a></li>
-            </ul>
-          </li>
+<?php
+  // Inclui o menu
+  include "menu.html";
+  include "conexao.php";
 
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Relatórios
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="relatoriosDropdown">
-              <li><a class="dropdown-item" href="#">Relatório de Produtos</a></li>
-              <li><a class="dropdown-item" href="#">Relatório de Clientes</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  // Criar a conexão
+  $conn = new mysqli($servername, $username, $password, $dbname);
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  // Verificar a conexão
+  if ($conn->connect_error) {
+    die("Falha na conexão: " . $conn->connect_error);
+  }
+
+  // Consultar os produtos no banco de dados
+  $sql = "SELECT prod_id, prod_nome, prod_valor, prod_qtde FROM tb_produtos";
+  $result = $conn->query($sql);
+?>
+
+<div class="container mt-5">
+  <div class="row">
+    <?php
+      if ($result->num_rows > 0) {
+        // Saída dos dados para cada produto
+        while($row = $result->fetch_assoc()) {
+          ?>
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <!-- Exibir a imagem do produto -->
+              <div class="card-body">
+                <h5 class="card-title"><?php echo $row['prod_nome']; ?></h5>
+                <p class="card-text">Valor: R$<?php echo number_format($row['prod_valor'], 2, ',', '.'); ?></p>
+                <p class="card-text">Quantidade: <?php echo $row['prod_qtde']; ?></p>
+              </div>
+            </div>
+          </div>
+          <?php
+        }
+      } else {
+        echo "<p>Nenhum produto encontrado.</p>";
+      }
+
+      // Fechar a conexão com o banco de dados
+      $conn->close();
+    ?>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
